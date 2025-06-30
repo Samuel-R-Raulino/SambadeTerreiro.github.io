@@ -1,0 +1,20 @@
+/* Garante que o container se ajuste à tela */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Container para controlar layout responsivo */
+.pdf-container {
+    width: 100%;
+    height: 100vh; /* ocupa a altura total da tela */
+    overflow: hidden;
+}
+
+/* Estilo do PDF responsivo */
+#pdf {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
