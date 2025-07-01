@@ -3,22 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Almanaque Samba de Terreiro</title>
+  <title>Visualizador de PDF</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      background-color: #f2f2f2;
+      font-family: sans-serif;
     }
 
-    .pdf-viewer {
-      width: 100%;
+    #pdf-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .download-button {
+      padding: 14px 24px;
+      font-size: 16px;
+      background-color: #007aff;
+      color: white;
       border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s;
+    }
+
+    .download-button:hover {
+      background-color: #005fc4;
+    }
+
+    embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      .download-button {
+        font-size: 18px;
+        padding: 16px 32px;
+      }
     }
   </style>
 </head>
 <body>
-  <embed src="arquivo.pdf" type="application/pdf" class="pdf-viewer">
+  <div id="pdf-container"></div>
+
+  <script>
+    function isSafari() {
+      const ua = navigator.userAgent;
+      return /^((?!chrome|android).)*safari/i.test(ua);
+    }
+
+    const container = document.getElementById("pdf-container");
+    const safari = isSafari();
+
+    if (safari) {
+      // Safari no iPhone, iPad ou Mac
+      const button = document.createElement("a");
+      button.href = "arquivo.pdf";
+      button.download = "arquivo.pdf";
+      button.textContent = "Baixar PDF";
+      button.className = "download-button";
+      container.appendChild(button);
+    } else {
+      // Outros navegadores: Chrome, Firefox, Edge, Opera...
+      const embed = document.createElement("embed");
+      embed.src = "arquivo.pdf";
+      embed.type = "application/pdf";
+      container.appendChild(embed);
+    }
+  </script>
 </body>
 </html>
