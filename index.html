@@ -7,36 +7,40 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="pdf-canvas"></canvas>
+  <div id="pdf-container"></div>
 
-  <!-- PDF.js via CDN (versão UMD compatível com Safari) -->
+  <!-- PDF.js via CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
-    const url = 'arquivo.pdf'; // Caminho do seu PDF
+    const url = 'arquivo.pdf';
 
-    // Configura o worker corretamente via CDN
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    // Carrega e renderiza o PDF
+    const container = document.getElementById('pdf-container');
+
     pdfjsLib.getDocument(url).promise.then(pdf => {
-      return pdf.getPage(1);
-    }).then(page => {
-      const scale = 1.2; // Escala segura para iPhone
-      const viewport = page.getViewport({ scale });
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        pdf.getPage(pageNumber).then(page => {
+          const scale = 1.2;
+          const viewport = page.getViewport({ scale });
 
-      const canvas = document.getElementById('pdf-canvas');
-      const context = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
 
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport
-      };
+          container.appendChild(canvas);
 
-      page.render(renderContext);
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+
+          page.render(renderContext);
+        });
+      }
     }).catch(error => {
-      alert('Erro ao carregar o PDF: ' + error.message);
+      alert('Erro ao carregar PDF: ' + error.message);
     });
   </script>
 </body>
