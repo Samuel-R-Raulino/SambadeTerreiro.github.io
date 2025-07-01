@@ -9,18 +9,19 @@
 <body>
   <canvas id="pdf-canvas"></canvas>
 
-  <script src="pdfjs/pdf.js"></script>
+  <!-- PDF.js via CDN (versão UMD compatível com Safari) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
-    const url = 'arquivo.pdf'; // Caminho para o PDF
+    const url = 'arquivo.pdf'; // Caminho do seu PDF
 
-    // Configura o worker do PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs/pdf.worker.js';
+    // Configura o worker corretamente via CDN
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    // Carrega o PDF
+    // Carrega e renderiza o PDF
     pdfjsLib.getDocument(url).promise.then(pdf => {
       return pdf.getPage(1);
     }).then(page => {
-      const scale = 1.5;
+      const scale = 1.2; // Escala segura para iPhone
       const viewport = page.getViewport({ scale });
 
       const canvas = document.getElementById('pdf-canvas');
@@ -32,7 +33,10 @@
         canvasContext: context,
         viewport: viewport
       };
+
       page.render(renderContext);
+    }).catch(error => {
+      alert('Erro ao carregar o PDF: ' + error.message);
     });
   </script>
 </body>
