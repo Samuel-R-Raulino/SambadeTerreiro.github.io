@@ -3,45 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Visualizador de PDF</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Visualizador PDF</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .pdf-viewer {
+      width: 100%;
+      height: 100vh;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-  <div id="pdf-container"></div>
-
-  <!-- PDF.js via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    const url = 'arquivo.pdf';
-
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    const container = document.getElementById('pdf-container');
-
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-        pdf.getPage(pageNumber).then(page => {
-          const scale = 1.2;
-          const viewport = page.getViewport({ scale });
-
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-
-          container.appendChild(canvas);
-
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-          };
-
-          page.render(renderContext);
-        });
-      }
-    }).catch(error => {
-      alert('Erro ao carregar PDF: ' + error.message);
-    });
-  </script>
+  <embed src="arquivo.pdf" type="application/pdf" class="pdf-viewer">
 </body>
 </html>
