@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Visualizador de PDF</title>
+  <title>Almanaque</title>
   <style>
     html, body {
       margin: 0;
@@ -57,29 +57,40 @@
   <div id="pdf-container"></div>
 
   <script>
-    function isSafari() {
-      const ua = navigator.userAgent;
-      return /^((?!chrome|android).)*safari/i.test(ua);
-    }
+  function isSafari() {
+    const ua = navigator.userAgent;
+    return /^((?!chrome|android).)*safari/i.test(ua);
+  }
 
-    const container = document.getElementById("pdf-container");
-    const safari = isSafari();
+  function isInAppBrowser() {
+    const ua = navigator.userAgent.toLowerCase();
+    return (
+      ua.includes('instagram') ||
+      ua.includes('fbav') ||
+      ua.includes('fb_iab') ||
+      ua.includes('tiktok') ||
+      ua.includes('wv')
+    );
+  }
 
-    if (safari) {
-      // Safari no iPhone, iPad ou Mac
-      const button = document.createElement("a");
-      button.href = "arquivo.pdf";
-      button.download = "arquivo.pdf";
-      button.textContent = "Baixar PDF";
-      button.className = "download-button";
-      container.appendChild(button);
-    } else {
-      // Outros navegadores: Chrome, Firefox, Edge, Opera...
-      const embed = document.createElement("embed");
-      embed.src = "arquivo.pdf";
-      embed.type = "application/pdf";
-      container.appendChild(embed);
-    }
-  </script>
+  const container = document.getElementById("pdf-container");
+
+  if (isSafari() || isInAppBrowser()) {
+    // Mostrar botão para abrir ou baixar o PDF
+    const button = document.createElement("a");
+    button.href = "arquivo.pdf";
+    button.target = "_blank"; // abre nova aba (importante para apps)
+    button.textContent = "Abrir PDF";
+    button.className = "download-button";
+    container.appendChild(button);
+  } else {
+    // Outros navegadores → mostrar PDF diretamente
+    const embed = document.createElement("embed");
+    embed.src = "arquivo.pdf";
+    embed.type = "application/pdf";
+    container.appendChild(embed);
+  }
+</script>
+
 </body>
 </html>
